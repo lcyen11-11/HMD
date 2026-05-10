@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>今天是母親節!!!</title>
+    <link href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&family=Ma+Shan+Zheng&family=Noto+Sans+TC:wght@500&family=Zen+Maru+Gothic:wght@500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        body {
+            margin: 0; padding: 0;
+            font-family: 'Zen Maru Gothic', 'Noto Sans TC', sans-serif;
+            background-color: #ffe6e6;
+            display: flex; justify-content: center; align-items: center;
+            min-height: 100vh; text-align: center; overflow-x: hidden;
+        }
+        h2, h3, .popup-text b { font-family: 'Zen Maru Gothic', sans-serif; font-weight: 700; color: #ff758c; }
+        button { font-family: 'Zen Maru Gothic', sans-serif; font-weight: 500; display: block; width: 100%; padding: 15px; margin: 10px 0; border: none; border-radius: 10px; font-size: 1.1rem; cursor: pointer; transition: 0.2s; }
+        img { max-width: 100%; height: auto; display: block; margin: 0 auto; }
+        .popup-box { background-color: white; padding: 30px 20px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 85%; max-width: 450px; z-index: 10; position: relative; }
+        .popup-text { font-size: 1.1rem; color: #333; margin-bottom: 20px; line-height: 1.6; }
+        .date-container { display: flex; gap: 8px; margin-bottom: 15px; }
+        select, input, textarea { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 8px; font-size: 1rem; box-sizing: border-box; }
+        .btn-primary { background-color: #ff758c; color: white; font-weight: bold; }
+        .btn-gift { background-color: #fff0f3; color: #d63384; border: 2px dashed #ff758c; }
+        .btn-end { background-color: #555; color: white; }
+        .hidden { display: none !important; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+        .fade-in { animation: fadeIn 1.2s ease-out forwards; }
+        .delay-05s { animation-delay: 0.5s; opacity: 0; }
+        .carousel { position: relative; width: 100%; margin-bottom: 15px; overflow: hidden; border-radius: 15px; background: #fff; }
+        .carousel-inner { display: flex; transition: 0.5s; height: 350px; align-items: center; background: #f9f9f9; }
+        .carousel-inner img { width: 100%; height: 100%; flex-shrink: 0; display: none; object-fit: contain; }
+        .carousel-inner img.active { display: block; }
+        .carousel-control { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(255,255,255,0.7); border: none; width: 35px; height: 35px; border-radius: 50%; cursor: pointer; color: #ff758c; padding: 0; z-index: 20;}
+        .prev { left: 10px; }
+        .next { right: 10px; }
+        .carousel-indicators { display: flex; justify-content: center; gap: 5px; margin-top: 10px; }
+        .carousel-indicators span { width: 8px; height: 8px; background: #ddd; border-radius: 50%; cursor: pointer; }
+        .carousel-indicators span.active { background: #ff758c; width: 20px; border-radius: 10px; }
+        .heart { position: fixed; top: -10%; color: #ff758c; user-select: none; z-index: 5; animation: fall linear forwards; }
+        @keyframes fall { to { transform: translateY(110vh) rotate(360deg); } }
+        .gift-content { text-align: left; padding: 10px; }
+        .card-text { background: #fff9fa; padding: 20px; border-radius: 10px; border-left: 5px solid #ff758c; white-space: pre-wrap; font-size: 1rem; color: #444; text-align: left;}
+    </style>
+</head>
+<body>
+
+    <div id="step-1" class="popup-box">
+        <div class="popup-text">泥豪！泥是馬麻嗎？</div>
+        <button class="btn-primary" onclick="showNext('step-1', 'q-birthday')">是媽媽呀~</button>
+        <button class="btn-primary" style="background-color: #f1f1f1; color: #666;" onclick="showNext('step-1', 'cry-page')">不是，請問你哪位？</button>
+    </div>
+
+    <div id="q-birthday" class="popup-box hidden">
+        <div class="popup-text"><b>第一關：身分確認</b><br>請問泥的西元年生日是？</div>
+        <div class="date-container">
+            <select id="birth-year"><option value="">年</option></select>
+            <select id="birth-month"><option value="">月</option></select>
+            <select id="birth-day"><option value="">日</option></select>
+        </div>
+        <button class="btn-primary" onclick="checkBirthday()">下一關</button>
+    </div>
+
+    <div id="q-cat" class="popup-box hidden">
+        <div class="popup-text"><b>第二關：記憶測試</b><br>請問泥小時候養的白貓叫什麼名字？</div>
+        <input type="text" id="input-cat" placeholder="請輸入名字...">
+        <button class="btn-primary" onclick="checkCat()">下一關</button>
+    </div>
+
+    <div id="q-blood" class="popup-box hidden">
+        <div class="popup-text"><b>第三關：最後確認</b><br>請問泥的血型是？</div>
+        <select id="input-blood">
+            <option value="">請選擇...</option>
+            <option value="A">A型</option><option value="B">B型</option><option value="O">O型</option><option value="AB">AB型</option>
+        </select>
+        <button class="btn-primary" onclick="checkBlood()">完成驗證</button>
+    </div>
+
+    <div id="liar-page" class="popup-box hidden">
+        <div class="popup-text">泥騙我！泥不是馬麻。・゜・(ノД`)・゜・。</div>
+        <button class="btn-end" onclick="endApp()">結束</button>
+    </div>
+
+    <div id="cry-page" class="popup-box hidden">
+        <div class="popup-text">我要媽媽~嗚哇啊啊啊啊啊啊!!!!<br>。・゜・(ノД`)・゜・。</div>
+        <button class="btn-end" onclick="endApp()">結束</button>
+    </div>
+
+    <div id="success-page" class="popup-box hidden">
+        <div class="popup-text">太好了！真的是馬麻(⁠◍⁠•⁠ᴗ⁠•⁠◍⁠)<br>歡迎光臨~(⁠*⁠´⁠ω⁠｀⁠*⁠)</div>
+        <button class="btn-primary" onclick="startGifts()">繼續</button>
+    </div>
+
+    <div id="gift-menu" class="popup-box hidden">
+        <h2 class="fade-in" style="color: #ff758c;">馬麻泥豪~這裡有一份泥的禮物~🎁</h2>
+        <p class="fade-in delay-05s">總共有三份 泥想先看哪一個呢？(⁠*⁠´⁠ω⁠｀⁠*⁠)</p>
+        <button class="btn-gift fade-in delay-05s" onclick="showGift('gift-video')">🎬想看影片</button>
+        <button class="btn-gift fade-in delay-05s" onclick="showGift('gift-photo')">📸想看照片</button>
+        <button class="btn-gift fade-in delay-05s" onclick="showGift('gift-card')">💌想看卡片</button>
+    </div>
+
+    <div id="gift-video" class="popup-box hidden">
+    <h3 class="fade-in">🎬 驚喜影片</h3>
+    <div class="gift-content fade-in delay-05s" style="text-align: center;">
+        
+        <div style="position: relative; background-color: #000; border-radius: 10px; overflow: hidden; margin-bottom: 15px;">
+            <img src="https://i.postimg.cc/NFscy27f/IMG-20260510-19193137.jpg" style="width: 100%; opacity: 0.8; display: block;">
+            
+            <a href="Https://youtube.com/shorts/s1vj8R8JgbI?si=nzHTp6KhLBUQ1OiN" target="_blank" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-decoration: none;">
+                <div style="background-color: rgba(255, 255, 255, 0.9); width: 60px; height: 60px; border-radius: 50%; display: flex; justify-content: center; align-items: center; box-shadow: 0 4px 15px rgba(0,0,0,0.3);">
+                    <div style="width: 0; height: 0; border-style: solid; border-width: 15px 0 15px 25px; border-color: transparent transparent transparent #ff758c; margin-left: 5px;"></div>
+                </div>
+            </a>
+        </div>
+
+        <p style="font-size: 0.95rem; color: #555;">
+          請點擊「中間的播放鍵」看影片喔！🎁
+        </p>
+    </div>
+    <button class="btn-primary" onclick="showNext('gift-video', 'gift-menu')">返回選單</button>
+</div>
+
+    <div id="gift-photo" class="popup-box hidden">
+        <h3 class="fade-in">📸 溫馨照片</h3>
+        <div class="carousel fade-in delay-05s">
+            <div class="carousel-inner" id="carousel-inner">
+                <img src="https://i.postimg.cc/5Ny6QBT3/IMG-1161.jpg" class="active"> 
+                <img src="https://i.postimg.cc/qMqz6sSw/IMG-1162.jpg"> 
+                <img src="https://i.postimg.cc/tCJYn3wD/IMG-1163.jpg"> 
+                <img src="https://i.postimg.cc/RVhNJ7yX/IMG-1164.jpg"> 
+                <img src="https://i.postimg.cc/KvW4PKhn/IMG-1154.jpg"> 
+            </div>
+            <button class="carousel-control prev" onclick="prevSlide()"><i class="fas fa-chevron-left"></i></button>
+            <button class="carousel-control next" onclick="nextSlide()"><i class="fas fa-chevron-right"></i></button>
+            <div class="carousel-indicators" id="indicators">
+                <span class="active" onclick="gotoSlide(0)"></span>
+                <span onclick="gotoSlide(1)"></span>
+                <span onclick="gotoSlide(2)"></span>
+                <span onclick="gotoSlide(3)"></span>
+                <span onclick="gotoSlide(4)"></span>
+            </div>
+        </div>
+        <p class="fade-in delay-05s">這些是我們最開心的回憶！</p>
+        <button class="btn-primary" onclick="showNext('gift-photo', 'gift-menu')">返回選單</button>
+    </div>
+
+    <div id="gift-card" class="popup-box hidden">
+        <h3 class="fade-in">💌 真心話沒有大冒險</h3>
+        <div class="gift-content fade-in delay-05s">
+            <div class="card-text">TO：哎呦我滴媽
+今年母親節又回不了家ㄌ(´・ω・`)&nbsp;
+不知道今年母親節泥有沒有開心的過餒？&nbsp;
+當然也希望不只母親節，每年每天都能開開心心的
+能做很多自己想做的事，
+不只是為了好好當一個媽媽，而是為了好好當｢王雯婷」
+畢竟在泥成為馬麻之前，也是個風華正盛、開朗明媚的美少女吶~(⁠*⁠´⁠ω⁠｀⁠*⁠)&nbsp;
+我也知道自己很像個不孝女哈哈 出去讀書之後就跟失蹤了一樣杳無音訊
+最近學校也有很多事要忙，百忙之中只來得及做這個網頁給泥，
+小小心意希望泥會喜歡(￣▽￣;)
+__跟失蹤沒兩樣的女兒 林阿晏</div>
+        </div> <button class="btn-primary" style="margin-top:20px;" onclick="showNext('gift-card', 'gift-menu')">返回選單</button>
+    </div>
+
+    <script>
+        window.onload = function() {
+            const ySelect = document.getElementById('birth-year');
+            const mSelect = document.getElementById('birth-month');
+            const dSelect = document.getElementById('birth-day');
+            for (let i = 1950; i <= 2026; i++) ySelect.options.add(new Option(i, i));
+            for (let i = 1; i <= 12; i++) mSelect.options.add(new Option(i, i));
+            for (let i = 1; i <= 31; i++) dSelect.options.add(new Option(i, i));
+        };
+
+        function showNext(current, next) {
+            document.getElementById(current).classList.add('hidden');
+            document.getElementById(next).classList.remove('hidden');
+        }
+
+        function fail() {
+            document.querySelectorAll('.popup-box').forEach(el => el.classList.add('hidden'));
+            document.getElementById('liar-page').classList.remove('hidden');
+        }
+
+        function checkBirthday() {
+            const y = document.getElementById('birth-year').value;
+            const m = document.getElementById('birth-month').value;
+            const d = document.getElementById('birth-day').value;
+            if (y === "1974" && m === "5" && d === "24") showNext('q-birthday', 'q-cat');
+            else fail();
+        }
+
+        function checkCat() {
+            const val = document.getElementById('input-cat').value.trim().toLowerCase();
+            if (val === "amy") showNext('q-cat', 'q-blood');
+            else fail();
+        }
+
+        function checkBlood() {
+            const val = document.getElementById('input-blood').value;
+            if (val === "B") showNext('q-blood', 'success-page');
+            else fail();
+        }
+
+        function startGifts() {
+            showNext('success-page', 'gift-menu');
+            setInterval(createHeart, 300);
+        }
+
+        function showGift(id) {
+            showNext('gift-menu', id);
+        }
+
+        let currentSlide = 0;
+        function updateCarousel() {
+            const slides = document.querySelectorAll('#carousel-inner img');
+            const inds = document.querySelectorAll('#indicators span');
+            if(slides.length === 0) return;
+            slides.forEach((s, i) => s.classList.toggle('active', i === currentSlide));
+            inds.forEach((s, i) => s.classList.toggle('active', i === currentSlide));
+        }
+
+        function nextSlide() {
+            const slides = document.querySelectorAll('#carousel-inner img');
+            currentSlide = (currentSlide + 1) % slides.length;
+            updateCarousel();
+        }
+
+        function prevSlide() {
+            const slides = document.querySelectorAll('#carousel-inner img');
+            currentSlide = (currentSlide - 1 + slides.length) % slides.length;
+            updateCarousel();
+        }
+
+        function gotoSlide(n) {
+            currentSlide = n;
+            updateCarousel();
+        }
+
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.classList.add('heart');
+            heart.innerHTML = '❤️';
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.animationDuration = Math.random() * 2 + 3 + 's';
+            heart.style.fontSize = Math.random() * 10 + 15 + 'px';
+            document.body.appendChild(heart);
+            setTimeout(() => { heart.remove(); }, 6000);
+        }
+
+        function endApp() {
+            document.body.innerHTML = '<h1 style="color:white; margin-top:20vh;">母親節快樂！</h1>';
+            document.body.style.backgroundColor = '#333';
+            window.close();
+        }
+    </script>
+</body>
+</html>
